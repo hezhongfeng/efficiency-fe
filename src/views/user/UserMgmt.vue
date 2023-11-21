@@ -34,26 +34,27 @@ const columns = [
     type: 'selection'
   },
   {
-    title: '用户名',
-    key: 'username'
+    title: '姓',
+    key: 'firstName'
   },
   {
-    title: '昵称',
-    key: 'nickname'
+    title: '名',
+    key: 'lastName'
+  },
+  {
+    title: '是否激活',
+    key: 'isActive',
+    render(row) {
+      return row.isActive ? '激活' : '未激活';
+    }
   },
   {
     title: '创建时间',
-    key: 'createdTime'
+    key: 'createdAt'
   },
   {
-    title: '角色',
-    key: 'roles',
-    render(row) {
-      const tags = row.roles.map(role => {
-        return h('div', {}, role.name);
-      });
-      return tags;
-    }
+    title: '更新时间',
+    key: 'updatedAt'
   },
   {
     title: '操作',
@@ -68,14 +69,6 @@ const columns = [
             style: { marginRight: '5px' }
           },
           { default: () => '编辑' }
-        ),
-        h(
-          NButton,
-          {
-            size: 'small',
-            onClick: () => onResetPasswordd(row)
-          },
-          { default: () => '重置密码' }
         )
       ];
     }
@@ -89,7 +82,8 @@ const tableData = computed(() =>
   data.value.list.map(item => {
     return {
       ...item,
-      createdTime: dayjs(item.createdTime).format('YYYY-MM-DD HH:mm:ss')
+      createdAt: dayjs(item.createdAt).format('YYYY-MM-DD HH:mm:ss'),
+      updatedAt: dayjs(item.updatedAt).format('YYYY-MM-DD HH:mm:ss')
     };
   })
 );
