@@ -15,15 +15,22 @@ const logout = () => {
 axios.interceptors.response.use(
   response => {
     const data = response.data;
+    console.log(data);
     // 没有code但是http状态为200表示外部请求成功
-    if (!data.code && response.status === 200) return data;
+    if (!data.code && (response.status === 200 || response.status === 304)) return data;
     // 根据返回的code值来做不同的处理（和后端的私有约定）
     switch (data.code) {
-      case 200:
+      case '200':
+        console.log(24);
+        return data;
+
+      case '304':
+        console.log(27);
         return data;
       default:
     }
     // 若不是正确的返回code，且已经登录，就抛出错误
+    console.log(31);
     throw data;
   },
   err => {
