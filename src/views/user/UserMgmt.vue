@@ -13,19 +13,8 @@
       @update:page="onUpdatePage"
       @update:page-size="onUpdatePageSize"
     />
-    <user-item
-      :show="showModel"
-      :roles="roles"
-      :item-id="itemId"
-      @model-show-change="onModelShowChange"
-      @refresh-list="queryList"
-    />
-    <reset-password
-      :show="resetModelShow"
-      :item-id="itemId"
-      @model-show-change="onResetModelShowChange"
-      @refresh-list="queryList"
-    />
+    <user-item :show="showModel" :item-id="itemId" @model-show-change="onModelShowChange" @refresh-list="queryList" />
+    <reset-password :show="resetModelShow" :item-id="itemId" @model-show-change="onResetModelShowChange" @refresh-list="queryList" />
   </div>
 </template>
 
@@ -93,13 +82,7 @@ const columns = [
   }
 ];
 
-const { data: rolesData } = useQueryList(urls.user.adminRole, undefined, 9999);
-
-const roles = computed(() => {
-  return rolesData.value.list;
-});
-
-const { data, loading, pagination, onUpdatePage, onUpdatePageSize, queryList } = useQueryList(urls.user.adminUser);
+const { data, loading, pagination, onUpdatePage, onUpdatePageSize, queryList } = useQueryList(urls.user.user);
 
 // 列表数据
 const tableData = computed(() =>
@@ -114,7 +97,7 @@ const tableData = computed(() =>
 // 删除列表相关逻辑
 const { checkedRowKeys, onCheckedRow, deleteList } = useDeleteList({
   content: '确定删除选中的用户？',
-  url: urls.user.adminUser,
+  url: urls.user.user,
   callback: () => {
     queryList();
   }

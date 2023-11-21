@@ -12,33 +12,14 @@
     @positive-click="submitCallback"
   >
     <n-form ref="formRef" :model="model" class="form" :rules="rules">
-      <n-form-item label="用户名" path="username">
-        <n-input v-model:value="model.username" placeholder="请输入用户名" :disabled="!!itemId" />
+      <n-form-item label="姓" path="firstName">
+        <n-input v-model:value="model.firstName" placeholder="请输入" />
       </n-form-item>
-      <n-form-item v-if="!itemId" path="password" label="密码">
-        <n-input-group>
-          <n-input v-model:value="model.password" :disabled="true" show-password-on="mousedown" />
-          <n-button type="primary" @click="onCopyPw">复制</n-button>
-        </n-input-group>
+      <n-form-item label="名" path="lastName">
+        <n-input v-model:value="model.lastName" placeholder="请输入" />
       </n-form-item>
-      <n-form-item path="nickname" label="昵称">
-        <n-input v-model:value="model.nickname" placeholder="请输入昵称" />
-      </n-form-item>
-      <n-form-item path="roleIds" label="角色">
-        <n-checkbox-group v-model:value="model.roleIds">
-          <n-space item-style="display: flex;">
-            <n-checkbox
-              v-for="role of roleOptions"
-              :key="role.value"
-              :value="role.value"
-              :label="role.label"
-              :disabled="role.label == '超级管理'"
-            />
-          </n-space>
-        </n-checkbox-group>
-      </n-form-item>
-      <n-form-item path="description" label="简介">
-        <n-input v-model:value="model.description" placeholder="请输入简介" type="textarea" />
+      <n-form-item label="是否激活" path="isActive">
+        <n-switch v-model:value="model.isActive" />
       </n-form-item>
     </n-form>
   </n-modal>
@@ -46,7 +27,6 @@
 
 <script setup name="user-item">
 import { ref, toRefs, watch, computed } from 'vue';
-import { generalPassword } from '@/utils/utils.js';
 import http from '@/utils/http';
 import urls from '@/common/urls';
 import { useMessage } from 'naive-ui';
@@ -56,23 +36,17 @@ const props = defineProps({
     type: Number,
     required: true
   },
-  show: Boolean,
-  roles: {
-    type: Array,
-    required: true
-  }
+  show: Boolean
 });
 
-const { itemId, show, roles } = toRefs(props);
+const { itemId, show } = toRefs(props);
 
 const emit = defineEmits(['model-show-change', 'refresh-list']);
 
 const model = ref({
-  roleIds: [],
-  username: null,
-  password: '',
-  nickname: null,
-  description: null
+  firstName: null,
+  lastName: null,
+  isActive: true
 });
 const formRef = ref(null);
 
@@ -86,28 +60,17 @@ const title = computed(() => {
   return itemId.value ? '编辑用户' : '新增用户';
 });
 
-const roleOptions = computed(() => {
-  return roles.value.map(role => {
-    return {
-      label: role.name,
-      value: role.id
-    };
-  });
-});
-
 const formDisabled = ref(false);
 
 const createUser = () => {
   formDisabled.value = true;
   const params = {
-    username: model.value.username,
-    password: model.value.password,
-    nickname: model.value.nickname,
-    description: model.value.description,
-    roleIds: model.value.roleIds
+    firstName: model.value.firstName,
+    lastName: model.value.lastName,
+    isActive: model.value.isActive
   };
   http
-    .post(`${urls.user.adminUser}`, params)
+    .post(`${urls.user.user}`, params)
     .then(() => {
       message.success('创建成功!');
       emit('model-show-change');
@@ -133,21 +96,18 @@ watch(show, val => {
 
 // reset 数据
 const reSetDate = () => {
-  model.value.username = null;
-  model.value.password = generalPassword();
-  model.value.nickname = null;
-  model.value.description = null;
-  model.value.roleIds = [];
+  model.value.firstName = null;
+  model.value.lastName = null;
+  model.value.isActive = true;
 };
 
 const getUser = () => {
   http
-    .get(`${urls.user.adminUser}/${itemId.value}`)
+    .get(`${urls.user.user}/${itemId.value}`)
     .then(({ data }) => {
-      model.value.username = data.username;
-      model.value.nickname = data.nickname;
-      model.value.description = data.description;
-      model.value.roleIds = data.roles.map(role => role.id);
+      model.value.firstName = data.firstName;
+      model.value.lastName = data.lastName;
+      model.value.isActive = data.isActive;
     })
     .catch(err => {
       message.warning(err.message);
@@ -157,12 +117,12 @@ const getUser = () => {
 const updateUser = () => {
   formDisabled.value = true;
   const params = {
-    nickname: model.value.nickname,
-    description: model.value.description,
-    roleIds: model.value.roleIds
+    firstName: model.value.firstName,
+    lastName: model.value.lastName,
+    isActive: model.value.isActive
   };
   http
-    .put(`${urls.user.adminUser}/${itemId.value}`, params)
+    .put(`${urls.user.user}/${itemId.value}`, params)
     .then(() => {
       message.success('更新成功!');
       emit('model-show-change');
@@ -194,20 +154,8 @@ const submitCallback = () => {
 };
 
 const rules = {
-  username: { required: true, message: '请输入用户名', trigger: 'blur' },
-  password: { required: true, message: '请输入密码', trigger: 'blur' },
-  nickname: { required: true, message: '请输入昵称', trigger: 'blur' }
-};
-
-const onCopyPw = () => {
-  navigator.clipboard.writeText(model.value.password).then(
-    () => {
-      message.success('复制成功');
-    },
-    () => {
-      console.log('error!');
-    }
-  );
+  firstName: { required: true, message: '请输入', trigger: 'blur' },
+  lastName: { required: true, message: '请输入', trigger: 'blur' }
 };
 </script>
 

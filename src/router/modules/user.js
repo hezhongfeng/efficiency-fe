@@ -21,24 +21,6 @@ const route = {
         permissions: ['admin']
       },
       component: () => import('@/views/user/UserMgmt.vue')
-    },
-    {
-      path: 'role-mgmt',
-      name: 'role-mgmt',
-      meta: {
-        title: '角色管理',
-        permissions: ['admin']
-      },
-      component: () => import('@/views/user/role/RoleMgmt.vue')
-    },
-    {
-      path: 'permission-mgmt',
-      name: 'permission-mgmt',
-      meta: {
-        title: '权限管理',
-        permissions: ['admin']
-      },
-      component: () => import('@/views/user/permission/PermissionMgmt.vue')
     }
   ]
 };

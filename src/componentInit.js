@@ -32,7 +32,8 @@ import {
   NGrid,
   NGridItem,
   NList,
-  NListItem
+  NListItem,
+  NSwitch
 } from 'naive-ui';
 
 const naive = create({
@@ -67,7 +68,8 @@ const naive = create({
     NGrid,
     NGridItem,
     NList,
-    NListItem
+    NListItem,
+    NSwitch
   ]
 });
 

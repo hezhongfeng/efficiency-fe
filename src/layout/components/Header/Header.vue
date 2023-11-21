@@ -3,10 +3,7 @@
     <!--左侧菜单-->
     <div class="layout-header-left">
       <!-- 菜单收起 -->
-      <div
-        class="ml-1 layout-header-trigger layout-header-trigger-min"
-        @click="() => emit('update:collapsed', !collapsed)"
-      >
+      <div class="ml-1 layout-header-trigger layout-header-trigger-min" @click="() => emit('update:collapsed', !collapsed)">
         <n-icon v-if="collapsed" size="18">
           <MenuUnfoldOutlined />
         </n-icon>
@@ -43,9 +40,8 @@
 </template>
 
 <script setup name="PageHeader">
-import { ref, computed, nextTick } from 'vue';
+import { ref, computed } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-import { useRootStore } from '@/store/root';
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@vicons/antd';
 import { useDialog } from 'naive-ui';
 
@@ -59,12 +55,10 @@ const emit = defineEmits(['update:collapsed']);
 
 const dialog = useDialog();
 
-const root = useRootStore();
-
 const router = useRouter();
 const route = useRoute();
 
-const nickname = computed(() => root.nickname);
+const nickname = 'hezf';
 
 const setCookies = ref([]);
 
@@ -97,15 +91,7 @@ const doLogout = () => {
     positiveText: '确定',
     negativeText: '取消',
     onPositiveClick: () => {
-      root.updateAccessToken('');
-      root.updateRefreshToken('');
-      root.updateUserId(null);
-      setTimeout(() => {
-        // 等待清除我完毕
-        nextTick(() => {
-          router.push('/login');
-        });
-      }, 100);
+      // 等待清除我完毕
     }
   });
 };

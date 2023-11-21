@@ -5,7 +5,9 @@
 <script setup name="Menu">
 import { ref, watch, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { useAsyncRoutes } from '@/store/asyncRoutes';
+import { UserMultiple } from '@vicons/carbon';
+import { NIcon } from 'naive-ui';
+import { h } from 'vue';
 
 const menuInstRef = ref(null);
 
@@ -14,9 +16,30 @@ const currentRoute = useRoute();
 
 const router = useRouter();
 
-const asyncRoutes = useAsyncRoutes();
+function renderIcon(icon) {
+  return () => h(NIcon, null, { default: () => h(icon) });
+}
 
-const { menus } = storeToRefs(asyncRoutes);
+const menus = [
+  {
+    name: 'User',
+    meta: {
+      title: '用户',
+      icon: renderIcon(UserMultiple)
+    },
+    children: [
+      {
+        path: 'user-mgmt',
+        name: 'user-mgmt',
+        meta: {
+          title: '用户管理',
+          permissions: ['admin']
+        },
+        component: () => import('@/views/user/UserMgmt.vue')
+      }
+    ]
+  }
+];
 
 const selectedKey = ref('');
 
