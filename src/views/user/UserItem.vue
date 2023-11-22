@@ -2,7 +2,6 @@
   <n-modal
     :mask-closable="false"
     :show="show"
-    :disabled="formDisabled"
     preset="dialog"
     :title="title"
     class="user-item"
@@ -11,7 +10,7 @@
     @update:show="onChangeModel"
     @positive-click="submitCallback"
   >
-    <n-form ref="formRef" :model="model" class="form" :rules="rules">
+    <n-form ref="formRef" :disabled="formDisabled" :model="model" class="form" :rules="rules">
       <n-form-item label="姓" path="firstName">
         <n-input v-model:value="model.firstName" placeholder="请输入" />
       </n-form-item>
@@ -102,6 +101,7 @@ const reSetDate = () => {
 };
 
 const getUser = () => {
+  formDisabled.value = true;
   http
     .get(`${urls.user.user}/${itemId.value}`)
     .then(({ data }) => {
@@ -111,6 +111,9 @@ const getUser = () => {
     })
     .catch(err => {
       message.warning(err.message);
+    })
+    .finally(() => {
+      formDisabled.value = false;
     });
 };
 

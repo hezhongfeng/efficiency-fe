@@ -14,7 +14,6 @@
       @update:page-size="onUpdatePageSize"
     />
     <user-item :show="showModel" :item-id="itemId" @model-show-change="onModelShowChange" @refresh-list="queryList" />
-    <reset-password :show="resetModelShow" :item-id="itemId" @model-show-change="onResetModelShowChange" @refresh-list="queryList" />
   </div>
 </template>
 
@@ -22,7 +21,6 @@
 import { h, ref, computed } from 'vue';
 import BizTable from '@/components/table/BizTable.vue';
 import UserItem from './UserItem.vue';
-import ResetPassword from './ResetPassword.vue';
 import { NButton } from 'naive-ui';
 import useQueryList from '@/composables/useQueryList';
 import useDeleteList from '@/composables/useDeleteList';
@@ -91,7 +89,7 @@ const tableData = computed(() =>
 // 删除列表相关逻辑
 const { checkedRowKeys, onCheckedRow, deleteList } = useDeleteList({
   content: '确定删除选中的用户？',
-  url: urls.user.user,
+  url: urls.user.userDelete,
   callback: () => {
     queryList();
   }
@@ -125,19 +123,9 @@ const onModelShowChange = () => {
   showModel.value = !showModel.value;
 };
 
-const onResetModelShowChange = () => {
-  resetModelShow.value = !resetModelShow.value;
-};
-
 const itemId = ref(0);
 
 const showModel = ref(false);
-const resetModelShow = ref(false);
-
-const onResetPasswordd = row => {
-  itemId.value = row.id;
-  resetModelShow.value = true;
-};
 
 const onEdit = row => {
   itemId.value = row.id;

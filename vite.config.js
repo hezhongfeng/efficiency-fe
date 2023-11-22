@@ -21,7 +21,7 @@ export default defineConfig({
   server: {
     port: 3002,
     proxy: {
-      '/api': 'https://efficiency-server.onrender.com'
+      '/api': 'http://localhost:3001'
     }
   }
 });

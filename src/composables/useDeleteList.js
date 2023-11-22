@@ -30,7 +30,7 @@ export default function useDeleteList({
           ids: checkedRowKeys.value
         };
         http
-          .delete(url, params)
+          .post(url, params)
           .then(() => {
             message.success('删除成功!');
             callback();
