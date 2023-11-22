@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router';
+import { createRouter, createWebHashHistory } from 'vue-router';
 import Layout from '@/layout/index.vue';
 
 const routes = [
@@ -9,6 +9,15 @@ const routes = [
     children: [
       {
         path: '/',
+        name: 'home',
+        meta: {
+          title: 'home-view',
+          permissions: ['admin']
+        },
+        component: () => import('@/views/home/HomeView.vue')
+      },
+      {
+        path: '/user-mgmt',
         name: 'user-mgmt',
         meta: {
           title: '用户管理',
@@ -21,7 +30,7 @@ const routes = [
 ];
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHashHistory(),
   routes
 });
 
