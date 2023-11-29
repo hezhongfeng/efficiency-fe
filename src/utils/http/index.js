@@ -11,7 +11,7 @@ const logout = () => {
   router.replace('/login');
 };
 
-axios.defaults.baseURL = 'https://efficiency-server.onrender.com';
+// axios.defaults.baseURL = 'https://efficiency-server.onrender.com';
 
 // 响应拦截器
 axios.interceptors.response.use(

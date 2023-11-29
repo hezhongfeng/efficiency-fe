@@ -10,15 +10,15 @@
     @update:show="onChangeModel"
     @positive-click="submitCallback"
   >
-    <n-form ref="formRef" :disabled="formDisabled" :model="model" class="form" :rules="rules">
+    <n-form ref="formRef" :disabled="formDisabled" :model="formModel" class="form" :rules="rules">
       <n-form-item label="姓" path="firstName">
-        <n-input v-model:value="model.firstName" placeholder="请输入" />
+        <n-input v-model:value="formModel.firstName" placeholder="请输入" />
       </n-form-item>
       <n-form-item label="名" path="lastName">
-        <n-input v-model:value="model.lastName" placeholder="请输入" />
+        <n-input v-model:value="formModel.lastName" placeholder="请输入" />
       </n-form-item>
       <n-form-item label="是否激活" path="isActive">
-        <n-switch v-model:value="model.isActive" />
+        <n-switch v-model:value="formModel.isActive" />
       </n-form-item>
     </n-form>
   </n-modal>
@@ -26,9 +26,7 @@
 
 <script setup name="user-item">
 import { ref, toRefs, watch, computed } from 'vue';
-import http from '@/utils/http';
 import urls from '@/common/urls';
-import { useMessage } from 'naive-ui';
 import useCreateItem from '@/composables/useCreateItem';
 import useUpdateItem from '@/composables/useUpdateItem';
 import useQueryItem from '@/composables/useQueryItem';
@@ -45,21 +43,15 @@ const { itemId, show } = toRefs(props);
 
 const emit = defineEmits(['model-show-change', 'refresh-list']);
 
-const model = ref({
+const formModel = ref({
   firstName: null,
   lastName: null,
   isActive: true
 });
 
-const params = {
-  firstName: model.value.firstName,
-  lastName: model.value.lastName,
-  isActive: model.value.isActive
-};
-
 const { formDisabled, createItem } = useCreateItem({
   url: urls.user.user,
-  params,
+  formModel,
   callback: () => {
     emit('model-show-change');
     emit('refresh-list');
@@ -67,8 +59,7 @@ const { formDisabled, createItem } = useCreateItem({
 });
 
 const { updateItem } = useUpdateItem({
-  url: `${urls.user.user}/${itemId.value}`,
-  params,
+  formModel,
   callback: () => {
     emit('model-show-change');
     emit('refresh-list');
@@ -77,17 +68,14 @@ const { updateItem } = useUpdateItem({
 });
 
 const { queryItem } = useQueryItem({
-  url: `${urls.user.user}/${itemId.value}`,
   callback: data => {
-    model.value.firstName = data.firstName;
-    model.value.lastName = data.lastName;
-    model.value.isActive = data.isActive;
+    formModel.value.firstName = data.firstName;
+    formModel.value.lastName = data.lastName;
+    formModel.value.isActive = data.isActive;
   }
 });
 
 const formRef = ref(null);
-
-const message = useMessage();
 
 const onChangeModel = () => {
   emit('model-show-change');
@@ -100,67 +88,26 @@ const title = computed(() => {
 watch(show, val => {
   if (val) {
     if (itemId.value) {
-      getUser();
+      queryItem({ url: `${urls.user.user}/${itemId.value}` });
     } else {
       reSetDate();
     }
   }
 });
 
-// reset 数据
+// reset form 数据
 const reSetDate = () => {
-  model.value.firstName = null;
-  model.value.lastName = null;
-  model.value.isActive = true;
-};
-
-const getUser = () => {
-  formDisabled.value = true;
-  http
-    .get(`${urls.user.user}/${itemId.value}`)
-    .then(({ data }) => {
-      model.value.firstName = data.firstName;
-      model.value.lastName = data.lastName;
-      model.value.isActive = data.isActive;
-    })
-    .catch(err => {
-      message.warning(err.message);
-    })
-    .finally(() => {
-      formDisabled.value = false;
-    });
-};
-
-const updateUser = () => {
-  formDisabled.value = true;
-  const params = {
-    firstName: model.value.firstName,
-    lastName: model.value.lastName,
-    isActive: model.value.isActive
-  };
-  http
-    .put(`${urls.user.user}/${itemId.value}`, params)
-    .then(() => {
-      message.success('更新成功!');
-      emit('model-show-change');
-      emit('refresh-list');
-    })
-    .catch(err => {
-      message.warning(err.message);
-    })
-    .finally(() => {
-      formDisabled.value = false;
-    });
+  formModel.value.firstName = null;
+  formModel.value.lastName = null;
+  formModel.value.isActive = true;
 };
 
 const submitCallback = () => {
   formRef.value.validate(errors => {
     if (!errors) {
       if (itemId.value) {
-        updateItem();
-        // updateUser();
+        updateItem({ url: `${urls.user.user}/${itemId.value}` });
       } else {
-        // createUser();
         createItem();
       }
     } else {

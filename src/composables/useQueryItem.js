@@ -1,10 +1,10 @@
 import http from 'utils/http';
 import { useMessage } from 'naive-ui';
 
-export default function useQueryItem({ url, callback }) {
+export default function useQueryItem({ callback }) {
   const message = useMessage();
 
-  const queryItem = () => {
+  const queryItem = ({ url }) => {
     http
       .get(url)
       .then(({ data }) => {
