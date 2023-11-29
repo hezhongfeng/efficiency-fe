@@ -2,7 +2,7 @@ import { ref } from 'vue';
 import { useMessage } from 'naive-ui';
 import http from '@/utils/http';
 
-export default function useCreateItem({ url, params, callback }) {
+export default function useCreateItem({ url, params = {}, callback }) {
   const message = useMessage();
 
   const formDisabled = ref(false);

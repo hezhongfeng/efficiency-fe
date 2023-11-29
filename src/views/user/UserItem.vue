@@ -29,6 +29,9 @@ import { ref, toRefs, watch, computed } from 'vue';
 import http from '@/utils/http';
 import urls from '@/common/urls';
 import { useMessage } from 'naive-ui';
+import useCreateItem from '@/composables/useCreateItem';
+import useUpdateItem from '@/composables/useUpdateItem';
+import useQueryItem from '@/composables/useQueryItem';
 
 const props = defineProps({
   itemId: {
@@ -47,6 +50,41 @@ const model = ref({
   lastName: null,
   isActive: true
 });
+
+const params = {
+  firstName: model.value.firstName,
+  lastName: model.value.lastName,
+  isActive: model.value.isActive
+};
+
+const { formDisabled, createItem } = useCreateItem({
+  url: urls.user.user,
+  params,
+  callback: () => {
+    emit('model-show-change');
+    emit('refresh-list');
+  }
+});
+
+const { updateItem } = useUpdateItem({
+  url: `${urls.user.user}/${itemId.value}`,
+  params,
+  callback: () => {
+    emit('model-show-change');
+    emit('refresh-list');
+  },
+  formDisabled
+});
+
+const { queryItem } = useQueryItem({
+  url: `${urls.user.user}/${itemId.value}`,
+  callback: data => {
+    model.value.firstName = data.firstName;
+    model.value.lastName = data.lastName;
+    model.value.isActive = data.isActive;
+  }
+});
+
 const formRef = ref(null);
 
 const message = useMessage();
@@ -58,30 +96,6 @@ const onChangeModel = () => {
 const title = computed(() => {
   return itemId.value ? '编辑用户' : '新增用户';
 });
-
-const formDisabled = ref(false);
-
-const createUser = () => {
-  formDisabled.value = true;
-  const params = {
-    firstName: model.value.firstName,
-    lastName: model.value.lastName,
-    isActive: model.value.isActive
-  };
-  http
-    .post(`${urls.user.user}`, params)
-    .then(() => {
-      message.success('创建成功!');
-      emit('model-show-change');
-      emit('refresh-list');
-    })
-    .catch(err => {
-      message.warning(err.message);
-    })
-    .finally(() => {
-      formDisabled.value = false;
-    });
-};
 
 watch(show, val => {
   if (val) {
@@ -143,9 +157,11 @@ const submitCallback = () => {
   formRef.value.validate(errors => {
     if (!errors) {
       if (itemId.value) {
-        updateUser();
+        updateItem();
+        // updateUser();
       } else {
-        createUser();
+        // createUser();
+        createItem();
       }
     } else {
       console.log(errors);

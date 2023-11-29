@@ -1,7 +1,7 @@
 import { useMessage } from 'naive-ui';
 import http from '@/utils/http';
 
-export default function useUpdateItem({ url, params, callback, formDisabled }) {
+export default function useUpdateItem({ url, params = {}, callback, formDisabled }) {
   const message = useMessage();
   const updateItem = () => {
     formDisabled.value = true;
