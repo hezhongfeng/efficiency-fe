@@ -12,10 +12,10 @@
   >
     <n-form ref="formRef" :disabled="formDisabled" :model="formModel" class="form" :rules="rules">
       <n-form-item label="姓" path="firstName">
-        <n-input v-model:value="formModel.firstName" placeholder="请输入" />
+        <n-input v-model:value="formModel.firstName" placeholder="请输入。。。" />
       </n-form-item>
       <n-form-item label="名" path="lastName">
-        <n-input v-model:value="formModel.lastName" placeholder="请输入" />
+        <n-input v-model:value="formModel.lastName" placeholder="请输入。。。" />
       </n-form-item>
       <n-form-item label="是否激活" path="isActive">
         <n-switch v-model:value="formModel.isActive" />
@@ -90,13 +90,13 @@ watch(show, val => {
     if (itemId.value) {
       queryItem({ url: `${urls.user.user}/${itemId.value}` });
     } else {
-      reSetDate();
+      reSetFormDate();
     }
   }
 });
 
 // reset form 数据
-const reSetDate = () => {
+const reSetFormDate = () => {
   formModel.value.firstName = null;
   formModel.value.lastName = null;
   formModel.value.isActive = true;

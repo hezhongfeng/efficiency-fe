@@ -25,6 +25,7 @@ export default function useQueryList(url, params = {}, pageSize = 20, page = 1) 
 
   // 列表查询参数变化，重新查询
   const onUpdatePageSize = pageSize => {
+    pagination.page = 1;
     pagination.pageSize = pageSize;
     queryList();
   };
@@ -35,7 +36,7 @@ export default function useQueryList(url, params = {}, pageSize = 20, page = 1) 
     // 这里考虑到可能有其他参数
     const queryParams = {
       ...params,
-      page: pagination.page,
+      current: pagination.page,
       pageSize: pagination.pageSize
     };
     http

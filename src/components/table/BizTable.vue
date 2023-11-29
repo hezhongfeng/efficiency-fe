@@ -17,6 +17,7 @@
         :page="pagination.page"
         :item-count="pagination.itemCount"
         :page-size="pagination.pageSize"
+        :page-sizes="pagination.pageSizes ? pagination.pageSizes : [10, 20, 30, 40]"
         @update:page="onUpdatePage"
         @update:page-size="onUpdatePageSize"
       />
