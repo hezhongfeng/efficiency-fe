@@ -68,6 +68,7 @@ const { updateItem } = useUpdateItem({
 });
 
 const { queryItem } = useQueryItem({
+  formDisabled,
   callback: data => {
     formModel.value.firstName = data.firstName;
     formModel.value.lastName = data.lastName;
