@@ -68,7 +68,43 @@ const columns = [
   }
 ];
 
-const { data, loading, pagination, onUpdatePage, onUpdatePageSize, queryList } = useQueryList(urls.work.work);
+const operations = computed(() => {
+  return [
+    {
+      name: 'create',
+      label: '新增',
+      type: 'primary'
+    },
+    {
+      name: 'delete',
+      label: '删除',
+      disabled: checkedRowKeys.value.length === 0
+    }
+  ];
+});
+
+const filters = ref([
+  {
+    label: '',
+    type: 'input',
+    placeholder: '请输入名称',
+    value: ''
+  }
+]);
+
+const onFilterChange = ({ index, type, value }) => {
+  filters.value[index].value = value;
+  queryList();
+};
+
+// 组织自定义参数
+const parmas = computed(() => {
+  return {
+    like: filters.value[0].value
+  };
+});
+
+const { data, loading, pagination, onUpdatePage, onUpdatePageSize, queryList } = useQueryList(urls.work.work, parmas);
 
 // 列表数据
 const tableData = computed(() =>
@@ -90,39 +126,8 @@ const { checkedRowKeys, onCheckedRow, deleteList } = useDeleteList({
   }
 });
 
-const operations = computed(() => {
-  return [
-    {
-      name: 'create',
-      label: '新增',
-      type: 'primary'
-    },
-    {
-      name: 'delete',
-      label: '删除',
-      disabled: checkedRowKeys.value.length === 0
-    }
-  ];
-});
-
-const filters = [
-  {
-    label: '',
-    type: 'input',
-    placeholder: '请输入名称',
-    value: ''
-  }
-];
-
 const onOperate = name => {
   operationFucs.get(name)();
-};
-
-const onFilterChange = ({ index, type, value }) => {
-  console.log('index, type, value', index, type, value);
-  // queryList({
-  //   [type]: value
-  // });
 };
 
 const create = () => {

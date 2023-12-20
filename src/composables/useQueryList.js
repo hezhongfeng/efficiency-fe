@@ -2,7 +2,7 @@ import { ref, onMounted } from 'vue';
 import { useMessage } from 'naive-ui';
 import http from 'utils/http';
 
-export default function useQueryList(url, params = {}, pageSize = 20, page = 1) {
+export default function useQueryList(url, params = ref({}), pageSize = 20, page = 1) {
   const message = useMessage();
   const loading = ref(true);
   const data = ref({
@@ -35,7 +35,7 @@ export default function useQueryList(url, params = {}, pageSize = 20, page = 1) 
 
     // 这里考虑到可能有其他参数
     const queryParams = {
-      ...params,
+      ...params.value,
       current: pagination.page,
       pageSize: pagination.pageSize
     };
