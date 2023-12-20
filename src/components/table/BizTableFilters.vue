@@ -1,13 +1,13 @@
 <template>
   <div class="biz-table-filters">
-    <div v-for="(filter, index) of filters" :key="index" class="filter-wrap">
-      <label class="filter-label" v-if="filter.label" :class="filter.class">{{ filter.label }}</label>
+    <div v-for="(filter, index) of filters" :key="index" class="filter-wrap" :class="filter.class">
+      <label class="filter-label" v-if="filter.label">{{ filter.label }}</label>
       <!-- 选择器 -->
-      <div v-if="filter.type === 'select'" class="biz-select" :class="filter.class">
+      <div v-if="filter.type === 'select'" class="biz-select">
         <n-select :value="filter.value" :options="filter.options" @update:value="handleChange(index, filter.type, $event)" />
       </div>
       <!-- 搜索框 -->
-      <div v-if="filter.type === 'input'" class="biz-input" :class="filter.class">
+      <div v-if="filter.type === 'input'" class="biz-input">
         <input-search :placeholder="filter.placeholder" @search="handleChange(index, filter.type, $event)" />
       </div>
     </div>

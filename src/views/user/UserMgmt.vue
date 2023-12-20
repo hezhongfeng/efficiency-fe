@@ -2,6 +2,7 @@
   <div class="user-mgmt">
     <biz-table
       :operations="operations"
+      :filters="filters"
       :loading="loading"
       :columns="columns"
       :data="tableData"
@@ -9,6 +10,7 @@
       :row-key="rowKey"
       :checked-row-keys="checkedRowKeys"
       @operate="onOperate"
+      @filter-change="onFilterChange"
       @update:checked-row-keys="onCheckedRow"
       @update:page="onUpdatePage"
       @update:page-size="onUpdatePageSize"
@@ -73,7 +75,49 @@ const columns = [
   }
 ];
 
-const { data, loading, pagination, onUpdatePage, onUpdatePageSize, queryList } = useQueryList(urls.user.user);
+const filters = ref([
+  {
+    label: '姓氏',
+    type: 'select',
+    value: '0',
+    class: 'filter-select',
+    options: [
+      {
+        label: '全部',
+        value: '0'
+      },
+      {
+        label: '已激活',
+        value: '1'
+      },
+      {
+        label: '未激活',
+        value: '2'
+      }
+    ]
+  },
+  {
+    label: '',
+    type: 'input',
+    placeholder: '请输入姓氏',
+    value: ''
+  }
+]);
+
+const onFilterChange = ({ index, type, value }) => {
+  filters.value[index].value = value;
+  queryList();
+};
+
+// 组织自定义参数
+const parmas = computed(() => {
+  return {
+    isActive: filters.value[0].value,
+    like: filters.value[1].value
+  };
+});
+
+const { data, loading, pagination, onUpdatePage, onUpdatePageSize, queryList } = useQueryList(urls.user.user, parmas);
 
 // 列表数据
 const tableData = computed(() =>
@@ -143,5 +187,10 @@ operationFucs.set('delete', deleteList);
 <style lang="scss">
 .user-mgmt {
   height: 100%;
+  .filter-select {
+    .biz-select {
+      width: 100px;
+    }
+  }
 }
 </style>
