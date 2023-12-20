@@ -4,9 +4,9 @@
       <label class="filter-label" v-if="filter.label" :class="filter.class">{{ filter.label }}</label>
       <!-- 选择器 -->
       <div v-if="filter.type === 'select'" class="biz-select" :class="filter.class">
-        <n-select :value="filter.value" :options="filter.options" @update:value="handleChange(filter.type, $event)" />
+        <n-select :value="filter.value" :options="filter.options" @update:value="handleChange(index, filter.type, $event)" />
       </div>
-      <!-- 输入框(搜索) -->
+      <!-- 搜索框 -->
       <div v-if="filter.type === 'input'" class="biz-input" :class="filter.class">
         <input-search :placeholder="filter.placeholder" @search="handleChange(index, filter.type, $event)" />
       </div>
@@ -43,10 +43,6 @@ const handleChange = (index, type, value) => {
     });
   }
 };
-
-// const onOperate = name => {
-//   emit('operate', name);
-// };
 </script>
 
 <style lang="scss">

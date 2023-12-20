@@ -1,12 +1,17 @@
 <template>
   <n-input-group class="input-search">
     <n-input :placeholder="placeholder || '请输入'" v-model:value="value" />
-    <n-button type="primary" ghost @click="onClick"> 搜索 </n-button>
+    <n-button @click="onClick">
+      <template #icon>
+        <n-icon><Search /></n-icon>
+      </template>
+    </n-button>
   </n-input-group>
 </template>
 
 <script setup>
 import { ref } from 'vue';
+import { Search } from '@vicons/carbon';
 
 const props = defineProps({
   placeholder: {
