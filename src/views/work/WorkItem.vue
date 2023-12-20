@@ -12,10 +12,10 @@
   >
     <n-form ref="formRef" :disabled="formDisabled" :model="formModel" class="form" :rules="rules">
       <n-form-item label="名称" path="name">
-        <n-input v-model:value="formModel.name" placeholder="请输入。。。" />
+        <n-input v-model:value="formModel.name" placeholder="请输入 work 名称" />
       </n-form-item>
       <n-form-item label="说明" path="desc">
-        <n-input v-model:value="formModel.desc" placeholder="请输入。。。" />
+        <n-input v-model:value="formModel.desc" placeholder="请输入 work 说明" />
       </n-form-item>
     </n-form>
   </n-modal>

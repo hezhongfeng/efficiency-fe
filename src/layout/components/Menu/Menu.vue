@@ -5,7 +5,7 @@
 <script setup name="Menu">
 import { ref, watch, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { UserMultiple, Home } from '@vicons/carbon';
+import { UserMultiple, Home, DataVis1 } from '@vicons/carbon';
 import { NIcon } from 'naive-ui';
 import { h } from 'vue';
 
@@ -42,6 +42,18 @@ const menus = [
         key: '/user-mgmt',
         name: 'user-mgmt',
         label: '用户管理'
+      }
+    ]
+  },
+  {
+    label: 'Work',
+    key: '/work',
+    icon: renderIcon(DataVis1),
+    children: [
+      {
+        key: '/work-mgmt',
+        name: 'work-mgmt',
+        label: 'Work管理'
       }
     ]
   }

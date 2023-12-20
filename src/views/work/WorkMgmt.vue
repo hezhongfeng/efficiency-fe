@@ -82,7 +82,7 @@ const tableData = computed(() =>
 // 删除列表相关逻辑
 const { checkedRowKeys, onCheckedRow, deleteList } = useDeleteList({
   content: '确定删除选中的Work？',
-  url: urls.work.userDelete,
+  url: urls.work.workDelete,
   callback: () => {
     queryList();
   }
