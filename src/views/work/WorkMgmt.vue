@@ -2,6 +2,7 @@
   <div class="work-mgmt">
     <biz-table
       :operations="operations"
+      :filters="filters"
       :loading="loading"
       :columns="columns"
       :data="tableData"
@@ -9,6 +10,7 @@
       :row-key="rowKey"
       :checked-row-keys="checkedRowKeys"
       @operate="onOperate"
+      @filter-change="onFilterChange"
       @update:checked-row-keys="onCheckedRow"
       @update:page="onUpdatePage"
       @update:page-size="onUpdatePageSize"
@@ -103,8 +105,24 @@ const operations = computed(() => {
   ];
 });
 
-const onOperate = function (name) {
+const filters = [
+  {
+    label: '',
+    type: 'input',
+    placeholder: '请输入名称',
+    value: ''
+  }
+];
+
+const onOperate = name => {
   operationFucs.get(name)();
+};
+
+const onFilterChange = ({ index, type, value }) => {
+  console.log('index, type, value', index, type, value);
+  // queryList({
+  //   [type]: value
+  // });
 };
 
 const create = () => {

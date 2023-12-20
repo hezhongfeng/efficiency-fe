@@ -47,5 +47,13 @@ const onCheckedRow = keys => {
 .biz-table-list {
   height: calc(100% - 54px - 48px);
   overflow-y: auto;
+  .n-data-table {
+    min-height: 100%;
+    .n-data-table-wrapper {
+      border-left: none;
+      border-right: none;
+      border-radius: 0;
+    }
+  }
 }
 </style>
