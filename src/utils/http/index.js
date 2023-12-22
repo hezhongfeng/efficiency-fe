@@ -3,9 +3,6 @@ import router from '@/router';
 
 axios.defaults.baseURL = window.location.origin;
 
-// vite HMR会导致模块重复加载，重复设置拦截器，这里手动给清除下
-axios.interceptors.response.handlers.length = 0;
-
 // 清空本地所有登录信息并跳转到登录页面
 const logout = () => {
   router.replace('/login');

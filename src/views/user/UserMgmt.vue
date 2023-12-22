@@ -21,14 +21,15 @@
 
 <script setup name="user-mgmt">
 import { h, ref, computed } from 'vue';
-import BizTable from '@/components/table/BizTable.vue';
-import UserItem from './UserItem.vue';
-import { NButton } from 'naive-ui';
-import useQueryList from '@/composables/useQueryList';
-import useDeleteList from '@/composables/useDeleteList';
 import urls from '@/common/urls';
 import dayjs from 'dayjs';
+import { NButton } from 'naive-ui';
+import BizTable from '@/components/table/BizTable.vue';
+import UserItem from './UserItem.vue';
+import useQueryList from '@/composables/useQueryList';
+import useDeleteList from '@/composables/useDeleteList';
 
+// 自定义列数据
 const columns = [
   {
     type: 'selection'
@@ -75,6 +76,7 @@ const columns = [
   }
 ];
 
+// 自定义右上角筛选
 const filters = ref([
   {
     label: '姓氏',
@@ -104,12 +106,13 @@ const filters = ref([
   }
 ]);
 
+// 筛选变化，需要重新查询列表
 const onFilterChange = ({ index, type, value }) => {
   filters.value[index].value = value;
   queryList();
 };
 
-// 组织自定义参数
+// 自定义查询列表参数
 const parmas = computed(() => {
   return {
     isActive: filters.value[0].value,
@@ -117,9 +120,10 @@ const parmas = computed(() => {
   };
 });
 
+// 封装好的查询列表方法和返回的数据
 const { data, loading, pagination, onUpdatePage, onUpdatePageSize, queryList } = useQueryList(urls.user.user, parmas);
 
-// 列表数据
+// 经过处理的列表数据，用于在 table 中展示
 const tableData = computed(() =>
   data.value.list.map(item => {
     return {
@@ -130,7 +134,7 @@ const tableData = computed(() =>
   })
 );
 
-// 删除列表相关逻辑
+// 删除列表相关逻辑封装
 const { checkedRowKeys, onCheckedRow, deleteList } = useDeleteList({
   content: '确定删除选中的用户？',
   url: urls.user.userDelete,
@@ -139,6 +143,7 @@ const { checkedRowKeys, onCheckedRow, deleteList } = useDeleteList({
   }
 });
 
+// 列表中的快捷操作
 const operations = computed(() => {
   return [
     {
@@ -154,10 +159,12 @@ const operations = computed(() => {
   ];
 });
 
+// 触发操作函数
 const onOperate = function (name) {
   operationFucs.get(name)();
 };
 
+// 新创建 item
 const create = () => {
   showModel.value = true;
   itemId.value = 0;
@@ -169,13 +176,16 @@ const onModelShowChange = () => {
 
 const itemId = ref(0);
 
+// 控制模态对话框
 const showModel = ref(false);
 
+// 编辑 item
 const onEdit = row => {
   itemId.value = row.id;
   showModel.value = true;
 };
 
+// 指定 table 的 rowKey
 const rowKey = row => row['id'];
 
 // operation 函数集合
