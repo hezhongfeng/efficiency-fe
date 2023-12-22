@@ -46,7 +46,7 @@ const columns = [
     title: '是否激活',
     key: 'isActive',
     render(row) {
-      return row.isActive ? '激活' : '未激活';
+      return row.isActive ? '已激活' : '未激活';
     }
   },
   {
