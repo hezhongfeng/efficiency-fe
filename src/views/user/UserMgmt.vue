@@ -79,7 +79,7 @@ const columns = [
 // 自定义右上角筛选
 const filters = ref([
   {
-    label: '姓氏',
+    label: '是否激活',
     type: 'select',
     value: '0',
     class: 'filter-select',

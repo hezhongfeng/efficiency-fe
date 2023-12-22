@@ -1,7 +1,7 @@
 <template>
   <div class="logo">
     <img class="image" :class="{ small: collapsed }" src="~/assets/logo.svg" />
-    <div v-show="!collapsed" class="title">认证管理</div>
+    <div v-show="!collapsed" class="title">一般管理</div>
   </div>
 </template>
 
