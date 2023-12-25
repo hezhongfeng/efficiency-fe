@@ -28,6 +28,7 @@ import BizTable from '@/components/table/BizTable.vue';
 import UserItem from './UserItem.vue';
 import useQueryList from '@/composables/useQueryList';
 import useDeleteList from '@/composables/useDeleteList';
+import useChangeUserActiveState from './useChangeUserActiveState';
 
 // 自定义列数据
 const columns = [
@@ -70,6 +71,15 @@ const columns = [
             style: { marginRight: '5px' }
           },
           { default: () => '编辑' }
+        ),
+        h(
+          NButton,
+          {
+            size: 'small',
+            onClick: () => onChangeUserActiveState(row),
+            style: { marginRight: '5px' }
+          },
+          { default: () => '改变状态' }
         )
       ];
     }
@@ -183,6 +193,20 @@ const showModel = ref(false);
 const onEdit = row => {
   itemId.value = row.id;
   showModel.value = true;
+};
+
+const { changeUserActiveState } = useChangeUserActiveState();
+
+// 改变激活状态
+const onChangeUserActiveState = row => {
+  changeUserActiveState({
+    id: row.id,
+    isActive: !row.isActive,
+    loading,
+    callback: () => {
+      queryList();
+    }
+  });
 };
 
 // 指定 table 的 rowKey
