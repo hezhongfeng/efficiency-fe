@@ -1,5 +1,6 @@
 <template>
   <n-modal
+    :show="true"
     class="work-item"
     positive-text="确认"
     negative-text="取消"
