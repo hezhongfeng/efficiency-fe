@@ -8,7 +8,7 @@ const logout = () => {
   router.replace('/login');
 };
 
-axios.defaults.baseURL = 'https://efficiency-server.onrender.com';
+axios.defaults.baseURL = 'https://efficiency-server.vercel.app';
 
 // 响应拦截器
 axios.interceptors.response.use(

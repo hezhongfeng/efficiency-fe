@@ -1,12 +1,12 @@
 <template>
   <n-modal
-    :mask-closable="false"
-    :show="show"
-    preset="dialog"
-    :title="title"
     class="work-item"
     positive-text="确认"
     negative-text="取消"
+    preset="dialog"
+    :mask-closable="false"
+    :title="title"
+    :loading="loading"
     @update:show="onChangeModel"
     @positive-click="submitCallback"
   >
@@ -22,7 +22,7 @@
 </template>
 
 <script setup name="work-item">
-import { ref, toRefs, watch, computed } from 'vue';
+import { ref, toRefs, computed, onMounted } from 'vue';
 import urls from '@/common/urls';
 import useCreateItem from '@/composables/useCreateItem';
 import useUpdateItem from '@/composables/useUpdateItem';
@@ -32,11 +32,13 @@ const props = defineProps({
   itemId: {
     type: Number,
     required: true
-  },
-  show: Boolean
+  }
 });
 
-const { itemId, show } = toRefs(props);
+// 这里是为了解构，否则就只能 props.itemId 来使用
+const { itemId } = toRefs(props);
+
+const loading = ref(false);
 
 const emit = defineEmits(['model-show-change', 'refresh-list']);
 
@@ -51,6 +53,7 @@ const { formDisabled, createItem } = useCreateItem({
   callback: () => {
     emit('model-show-change');
     emit('refresh-list');
+    loading.value = false;
   }
 });
 
@@ -59,6 +62,7 @@ const { updateItem } = useUpdateItem({
   callback: () => {
     emit('model-show-change');
     emit('refresh-list');
+    loading.value = false;
   },
   formDisabled
 });
@@ -68,6 +72,7 @@ const { queryItem } = useQueryItem({
   callback: data => {
     formModel.value.name = data.name;
     formModel.value.desc = data.desc;
+    loading.value = false;
   }
 });
 
@@ -81,28 +86,21 @@ const title = computed(() => {
   return itemId.value ? '编辑Work' : '新增Work';
 });
 
-watch(show, val => {
-  if (val) {
-    if (itemId.value) {
-      queryItem({ url: `${urls.work.work}/${itemId.value}` });
-    } else {
-      reSetFormDate();
-    }
+onMounted(() => {
+  if (itemId.value) {
+    queryItem.value = true;
+    queryItem({ url: `${urls.work.work}/${itemId.value}` });
   }
 });
-
-// reset form 数据
-const reSetFormDate = () => {
-  formModel.value.name = null;
-  formModel.value.desc = null;
-};
 
 const submitCallback = () => {
   formRef.value.validate(errors => {
     if (!errors) {
       if (itemId.value) {
+        queryItem.value = true;
         updateItem({ url: `${urls.work.work}/${itemId.value}` });
       } else {
+        queryItem.value = true;
         createItem();
       }
     } else {

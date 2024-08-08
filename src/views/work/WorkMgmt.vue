@@ -15,7 +15,7 @@
       @update:page="onUpdatePage"
       @update:page-size="onUpdatePageSize"
     />
-    <work-item :show="showModel" :item-id="itemId" @model-show-change="onModelShowChange" @refresh-list="queryList" />
+    <work-item v-if="showModel" :item-id="itemId" @model-show-change="onModelShowChange" @refresh-list="queryList" />
   </div>
 </template>
 

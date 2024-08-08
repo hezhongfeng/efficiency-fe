@@ -1,8 +1,10 @@
 import http from 'utils/http';
 import { useMessage } from 'naive-ui';
+import { ref } from 'vue';
 
 export default function useQueryItem({ callback, formDisabled }) {
   const message = useMessage();
+  const loading = ref(true);
 
   const queryItem = ({ url }) => {
     formDisabled.value = true;
@@ -16,10 +18,12 @@ export default function useQueryItem({ callback, formDisabled }) {
       })
       .finally(() => {
         formDisabled.value = false;
+        loading.value = false;
       });
   };
 
   return {
+    loading,
     queryItem
   };
 }
