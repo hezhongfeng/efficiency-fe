@@ -1,7 +1,7 @@
 <template>
   <n-modal
     :mask-closable="false"
-    :show="show"
+    :show="true"
     preset="dialog"
     :title="title"
     class="user-item"
@@ -25,7 +25,7 @@
 </template>
 
 <script setup name="user-item">
-import { ref, toRefs, watch, computed } from 'vue';
+import { ref, toRefs, computed, onMounted } from 'vue';
 import urls from '@/common/urls';
 import useCreateItem from '@/composables/useCreateItem';
 import useUpdateItem from '@/composables/useUpdateItem';
@@ -35,11 +35,10 @@ const props = defineProps({
   itemId: {
     type: Number,
     required: true
-  },
-  show: Boolean
+  }
 });
 
-const { itemId, show } = toRefs(props);
+const { itemId } = toRefs(props);
 
 const emit = defineEmits(['model-show-change', 'refresh-list']);
 
@@ -86,22 +85,12 @@ const title = computed(() => {
   return itemId.value ? '编辑用户' : '新增用户';
 });
 
-watch(show, val => {
-  if (val) {
-    if (itemId.value) {
-      queryItem({ url: `${urls.user.user}/${itemId.value}` });
-    } else {
-      reSetFormDate();
-    }
+onMounted(() => {
+  if (itemId.value) {
+    queryItem.value = true;
+    queryItem({ url: `${urls.user.user}/${itemId.value}` });
   }
 });
-
-// reset form 数据
-const reSetFormDate = () => {
-  formModel.value.firstName = null;
-  formModel.value.lastName = null;
-  formModel.value.isActive = true;
-};
 
 const submitCallback = () => {
   formRef.value.validate(errors => {
